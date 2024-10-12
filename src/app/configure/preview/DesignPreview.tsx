@@ -34,9 +34,9 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   const tw = COLORS.find(
     (supportedColor) => supportedColor.value === color
   )?.tw;
-  const { label: modelLabel } = MODELS.options.find(
-    ({ value }) => value === model
-  );
+
+  const modelOption = MODELS.options.find(({ value }) => value === model);
+  const modelLabel = modelOption ? modelOption.label : "Unknown Model";
 
   let totalPrice = BASE_PRICE;
   if (material === "polycarbonate") {
