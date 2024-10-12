@@ -1,23 +1,22 @@
-import { clsx, type ClassValue } from "clsx";
-import { Metadata } from "next";
-import { twMerge } from "tailwind-merge";
+import { type ClassValue, clsx } from 'clsx'
+import { Metadata } from 'next'
+import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs))
 }
 
 export const formatPrice = (price: number) => {
-  const formatter = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "EUR",
-  });
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  })
 
-  return formatter.format(price);
-};
-
+  return formatter.format(price)
+}
 
 export function constructMetadata({
-  title = 'PrintPal - custom high-quality phone cases',
+  title = 'PixiWrap - custom high-quality phone cases',
   description = 'Create custom high-quality phone cases in seconds',
   image = '/thumbnail.png',
   icons = '/favicon.ico',
@@ -43,6 +42,6 @@ export function constructMetadata({
       creator: '@hedayat_fa',
     },
     icons,
-    metadataBase: new URL("https://printpal.vercel.app/")
+    metadataBase: new URL("https://pixiwrap.vercel.app")
   }
 }
