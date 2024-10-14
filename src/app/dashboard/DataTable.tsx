@@ -42,48 +42,52 @@ import { Order, ShippingAddress } from "@prisma/client";
 import StatusDropdown from "./StatusDropdown";
 import { formatPrice } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2Icon, CheckIcon, ClipboardIcon } from "lucide-react";
+import {
+  CheckCircle2Icon,
+  CheckIcon,
+  ClipboardIcon,
+  Loader2,
+} from "lucide-react";
 import { toast, useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 
-
-  type OrderWithUserAndAddress = {
-    id: string;
-    user: {
-      email: string;
-    };
-    shippingAddress: ShippingAddress | null;
-    amount: number;
-    isPaid: boolean;
-    createdAt: Date;
-    // Add other fields as needed
+type OrderWithUserAndAddress = {
+  id: string;
+  user: {
+    email: string;
   };
+  shippingAddress: ShippingAddress | null;
+  amount: number;
+  isPaid: boolean;
+  createdAt: Date;
+  // Add other fields as needed
+};
 
 let data: OrderWithUserAndAddress[] = [];
 
 export const columns: ColumnDef<OrderWithUserAndAddress>[] = [
-//   {
-//     id: "select",
-//     header: ({ table }) => (
-//       <Checkbox
-//         checked={
-//           table.getIsAllPageRowsSelected() ||
-//           (table.getIsSomePageRowsSelected() && "indeterminate")
-//         }
-//         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-//         aria-label="Select all"
-//       />
-//     ),
-//     cell: ({ row }) => (
-//       <Checkbox
-//         checked={row.getIsSelected()}
-//         onCheckedChange={(value) => row.toggleSelected(!!value)}
-//         aria-label="Select row"
-//       />
-//     ),
-//     enableSorting: false,
-//     enableHiding: false,
-//   },
+  //   {
+  //     id: "select",
+  //     header: ({ table }) => (
+  //       <Checkbox
+  //         checked={
+  //           table.getIsAllPageRowsSelected() ||
+  //           (table.getIsSomePageRowsSelected() && "indeterminate")
+  //         }
+  //         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //         aria-label="Select all"
+  //       />
+  //     ),
+  //     cell: ({ row }) => (
+  //       <Checkbox
+  //         checked={row.getIsSelected()}
+  //         onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //         aria-label="Select row"
+  //       />
+  //     ),
+  //     enableSorting: false,
+  //     enableHiding: false,
+  //   },
   {
     accessorKey: "id",
     header: () => <div className="text-left">Order Number</div>,
@@ -195,142 +199,249 @@ export const columns: ColumnDef<OrderWithUserAndAddress>[] = [
       );
     },
   },
-//   {
-//     id: "actions",
-//     enableHiding: false,
-//     cell: ({ row }) => {
-//       const payment = row.original;
+  //   {
+  //     id: "actions",
+  //     enableHiding: false,
+  //     cell: ({ row }) => {
+  //       const payment = row.original;
 
-//       return (
-//         <DropdownMenu>
-//           <DropdownMenuTrigger asChild>
-//             <Button variant="ghost" className="h-8 w-8 p-0">
-//               <span className="sr-only">Open menu</span>
-//               <DotsHorizontalIcon className="h-4 w-4" />
-//             </Button>
-//           </DropdownMenuTrigger>
-//           <DropdownMenuContent align="end">
-//             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-//             <DropdownMenuItem
-//               onClick={() => navigator.clipboard.writeText(payment.id)}
-//             >
-//               Copy payment ID
-//             </DropdownMenuItem>
-//             <DropdownMenuSeparator />
-//             <DropdownMenuItem>View customer</DropdownMenuItem>
-//             <DropdownMenuItem>View payment details</DropdownMenuItem>
-//           </DropdownMenuContent>
-//         </DropdownMenu>
-//       );
-//     },
-//   },
+  //       return (
+  //         <DropdownMenu>
+  //           <DropdownMenuTrigger asChild>
+  //             <Button variant="ghost" className="h-8 w-8 p-0">
+  //               <span className="sr-only">Open menu</span>
+  //               <DotsHorizontalIcon className="h-4 w-4" />
+  //             </Button>
+  //           </DropdownMenuTrigger>
+  //           <DropdownMenuContent align="end">
+  //             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+  //             <DropdownMenuItem
+  //               onClick={() => navigator.clipboard.writeText(payment.id)}
+  //             >
+  //               Copy payment ID
+  //             </DropdownMenuItem>
+  //             <DropdownMenuSeparator />
+  //             <DropdownMenuItem>View customer</DropdownMenuItem>
+  //             <DropdownMenuItem>View payment details</DropdownMenuItem>
+  //           </DropdownMenuContent>
+  //         </DropdownMenu>
+  //       );
+  //     },
+  //   },
 ];
 
-
 export function DataTable({ orders }: { orders: OrderWithUserAndAddress[] }) {
-    const [loading, setLoading] = useState(true);
-    const [data, setData] = useState<OrderWithUserAndAddress[]>([]);
-    const [sorting, setSorting] = useState<SortingState>([]);
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-    const [rowSelection, setRowSelection] = useState({});
-  
-    const table = useReactTable({
-      data,
-      columns,
-      onSortingChange: setSorting,
-      onColumnFiltersChange: setColumnFilters,
-      getCoreRowModel: getCoreRowModel(),
-      getPaginationRowModel: getPaginationRowModel(),
-      getSortedRowModel: getSortedRowModel(),
-      getFilteredRowModel: getFilteredRowModel(),
-      onColumnVisibilityChange: setColumnVisibility,
-      onRowSelectionChange: setRowSelection,
-      state: {
-        sorting,
-        columnFilters,
-        columnVisibility,
-        rowSelection,
-      },
-    });
-  
-    // Simulate data fetching
-    useEffect(() => {
-      // Mimic data fetching delay
-      setTimeout(() => {
-        setData(orders); // Set your orders data here
-        setLoading(false); // Set loading to false when data is ready
-      }, 1500); // You can replace this with actual data fetching logic
-    }, [orders]);
-  
-    if (loading) {
-      // Render a loader while the data is loading
-      return (
-        <div className="flex justify-center items-center h-screen">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-gray-900"></div>
-          <span className="ml-4 text-xl font-semibold">Loading data...</span>
-        </div>
-      );
-    }
-  
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<OrderWithUserAndAddress[]>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+
+  const table = useReactTable({
+    data,
+    columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
+  });
+
+  // Simulate data fetching
+  useEffect(() => {
+    // Mimic data fetching delay
+    setTimeout(() => {
+      setData(orders); // Set your orders data here
+      setLoading(false); // Set loading to false when data is ready
+    }, 1500); // You can replace this with actual data fetching logic
+  }, [orders]);
+
+  if (loading) {
+    // Render a loader while the data is loading
     return (
-      <div className="w-full">
-        <h1 className="text-4xl font-bold tracking-tight mb-5">Incoming orders</h1>
-  
-        <div className="rounded-md border bg-white p-5">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-  
-        <div className="flex items-center justify-between space-x-2 py-4">
-          {/* Pagination controls and other UI components */}
+      <div className="w-full mt-24 flex justify-center">
+        <div className="flex flex-col items-center gap-2">
+          <Loader2 className="h-8 w-8 animate-spin text-zinc-500" />
+          <h3 className="font-semibold text-xl">Loading...</h3>
         </div>
       </div>
     );
   }
+
+  return (
+    <div className="w-full">
+      <h1 className="text-4xl font-bold tracking-tight mb-5">
+        Incoming orders
+      </h1>
+
+      <div className="rounded-md border bg-white p-5">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Pagination and items per page dropdown on the right */}
+      <div className="flex items-center justify-between space-x-2 py-4">
+        {/* Showing how many of how much on the left */}
+        <div className="flex-1 text-sm text-muted-foreground">
+          {table.getRowModel().rows.length > 0
+            ? `${
+                table.getState().pagination.pageIndex *
+                  table.getState().pagination.pageSize +
+                1
+              }-
+        ${Math.min(
+          (table.getState().pagination.pageIndex + 1) *
+            table.getState().pagination.pageSize,
+          table.getFilteredRowModel().rows.length
+        )} of ${table.getFilteredRowModel().rows.length}`
+            : "0 of 0"}{" "}
+          order(s) displayed.
+        </div>
+
+        {/* Pagination and items per page dropdown on the right */}
+        <div className="flex items-center space-x-2">
+          {/* Custom Dropdown for columns */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Custom Dropdown for items per page */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Show {table.getState().pagination.pageSize}{" "}
+                <ChevronDownIcon className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <DropdownMenuItem
+                  key={pageSize}
+                  onClick={() => table.setPageSize(pageSize)}
+                >
+                  Show {pageSize}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Previous and Next buttons with page numbers */}
+          <div className="flex items-center space-x-1">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Previous
+            </Button>
+
+            {/* Page Numbers */}
+            {Array.from({ length: table.getPageCount() }, (_, i) => (
+              <Button
+                key={i}
+                variant={
+                  i === table.getState().pagination.pageIndex
+                    ? "ghost"
+                    : "outline"
+                } // Highlight active page
+                size="sm"
+                onClick={() => table.setPageIndex(i)}
+              >
+                {i + 1}
+              </Button>
+            ))}
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Next
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

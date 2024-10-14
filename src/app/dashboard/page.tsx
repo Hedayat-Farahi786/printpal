@@ -36,6 +36,7 @@ const DashboardPage = () => {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [lastWeekSum, setLastWeekSum] = useState(0);
   const [lastMonthSum, setLastMonthSum] = useState(0);
+  const [isLoading, setIsLoading] = useState(true); // New loading state
   const router = useRouter();
 
   useEffect(() => {
@@ -67,6 +68,7 @@ const DashboardPage = () => {
   }, [router]);
 
   const fetchOrders = async () => {
+    setIsLoading(true); // Set loading to true before fetching data
     try {
       const response = await fetch("/api/orders");
       const data = await response.json();
@@ -76,10 +78,12 @@ const DashboardPage = () => {
       setLastMonthSum(data.lastMonthSum);
     } catch (error) {
       console.error("Error fetching orders:", error);
+    } finally {
+      setIsLoading(false); // Set loading to false after data is fetched
     }
   };
 
-  if (!isAuthorized) {
+  if (!isAuthorized || isLoading) {
     return <div className="w-full mt-24 flex justify-center">
     <div className="flex flex-col items-center gap-2">
       <Loader2 className="h-8 w-8 animate-spin text-zinc-500" />
@@ -93,7 +97,7 @@ const DashboardPage = () => {
   const MONTHLY_GOAL = 2500;
 
   return (
-    <div className="flex min-h-screen w-full bg-muted/40">
+    <div className="flex min-h-screen w-full bg-muted/40 p-5">
       <div className="max-w-7xl w-full mx-auto flex flex-col sm:gap-4 sm:py-4">
         <div className="flex flex-col gap-16">
           <div className="grid gap-4 sm:grid-cols-2">
