@@ -136,7 +136,7 @@ export const columns: ColumnDef<OrderWithAddress>[] = [
       <div>
         <div className="font-medium">{row.original?.shippingAddress?.name}</div>
         <div className="hidden text-sm text-muted-foreground md:inline">
-          {row.getValue("user")?.email}
+          {row.original?.user?.email || "No email available"}
         </div>
       </div>
     ),
