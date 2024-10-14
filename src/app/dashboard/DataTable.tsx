@@ -405,7 +405,7 @@ export function DataTable({ orders }: { orders: OrderWithUserAndAddress[] }) {
                 key={i}
                 variant={
                   i === table.getState().pagination.pageIndex
-                    ? "solid"
+                    ? "ghost"
                     : "outline"
                 } // Highlight active page
                 size="sm"
