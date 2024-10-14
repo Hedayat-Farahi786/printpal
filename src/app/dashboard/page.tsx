@@ -27,6 +27,7 @@ import { decodeJWT } from "@/lib/decodeJWT";
 import { Order } from "@prisma/client";
 import { DataTable } from "./DataTable";
 import { Chart } from "./Chart";
+import { Loader2 } from "lucide-react";
 
 const secret = process.env.JWT_SECRET!;
 
@@ -79,7 +80,13 @@ const DashboardPage = () => {
   };
 
   if (!isAuthorized) {
-    return <div>Loading...</div>;
+    return <div className="w-full mt-24 flex justify-center">
+    <div className="flex flex-col items-center gap-2">
+      <Loader2 className="h-8 w-8 animate-spin text-zinc-500" />
+      <h3 className="font-semibold text-xl">Loading...</h3>
+      <p>This won't take long.</p>
+    </div>
+  </div>;
   }
 
   const WEEKLY_GOAL = 500;
@@ -125,7 +132,7 @@ const DashboardPage = () => {
           </div>
 
           <Chart />
-          <DataTable orders={orders} />
+          {orders && <DataTable orders={orders} />}
 
           {/* <Table>
             <TableHeader>

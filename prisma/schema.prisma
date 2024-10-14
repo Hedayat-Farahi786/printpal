@@ -102,3 +102,16 @@ model BillingAddress {
   phoneNumber String?
   orders      Order[]
 }
+
+model VisitorCount {
+  id      Int      @id @default(autoincrement())
+  date    DateTime @unique
+  desktop Int      @default(0)
+  mobile  Int      @default(0)
+}
+
+model VisitorSession {
+  id        String   @id @default(cuid())
+  lastVisit DateTime @default(now())
+}
+

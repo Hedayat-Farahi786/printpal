@@ -30,8 +30,12 @@ export const createCheckoutSession = async ({
 
   // 3. If no token is found, return notFound or redirect to login
   if (!token) {
+    console.log("no token");
+    
     return notFound();
   }
+  console.log("yes token");
+
 
   // 4. Verify and decode the JWT token
   let user: any;
@@ -72,7 +76,7 @@ export const createCheckoutSession = async ({
   }
 
    // Make sure the server URL is valid and correctly loaded
-   const serverUrl = process.env.SERVER_URL;
+   const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
    if (!serverUrl || !serverUrl.startsWith("http")) {
      throw new Error("Server URL is not properly set or invalid.");
    }
@@ -93,8 +97,8 @@ export const createCheckoutSession = async ({
 
   // 8. Create a Stripe checkout session
   const stripeSession = await stripe.checkout.sessions.create({
-    success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${order.id}`,
-    cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/configure/preview?id=${configuration.id}`,
+    success_url: `https://pixiwrap.vercel.app/thank-you?orderId=${order.id}`,
+    cancel_url: `https://pixiwrap.vercel.app/configure/preview?id=${configuration.id}`,
     payment_method_types: ["card", "paypal", "klarna", "sofort"],
     mode: "payment",
     shipping_address_collection: { allowed_countries: ["DE", "US"] },

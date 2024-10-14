@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import { constructMetadata } from "@/lib/utils";
 import Providers from "@/components/Providers";
+import VisitorTracker from "@/components/VisitorTracker";
 
 const recursive = Recursive({ subsets: ["latin"] });
 
@@ -19,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={recursive.className}>
+        <VisitorTracker />
         <Providers>
           <Navbar />
 
