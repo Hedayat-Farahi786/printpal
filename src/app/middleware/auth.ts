@@ -1,5 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
+
+type UserPayload = {
+  userId: string;
+  email: string;
+};
 
 export function authenticateToken(
   req: NextApiRequest,
@@ -14,7 +19,12 @@ export function authenticateToken(
   jwt.verify(token, process.env.JWT_SECRET!, (err, user) => {
     if (err) return res.status(403).json({ message: "Invalid token" });
 
-    req.user = user; // Attach user info to request
-    next();
+    // Narrow down the type of user to check for the correct structure
+    if (typeof user === "object" && (user as JwtPayload).userId && (user as JwtPayload).email) {
+      req.user = user as UserPayload; // Attach user info to request
+      next();
+    } else {
+      return res.status(403).json({ message: "Invalid token structure" });
+    }
   });
 }
