@@ -4,7 +4,7 @@ import { db } from '@/db'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   authenticateToken(req, res, async () => {
-    const userId = req.user.userId
+    const userId = req.user?.userId
 
     const user = await db.user.findUnique({
       where: { id: userId },
