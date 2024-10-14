@@ -218,7 +218,22 @@ export const columns: ColumnDef<OrderWithAddress>[] = [
 //   },
 ];
 
-export function DataTable({ orders }) {
+
+type OrderWithUserAndAddress = {
+    id: string;
+    user: {
+      email: string;
+    };
+    shippingAddress: {
+      name: string;
+    };
+    amount: number;
+    isPaid: boolean;
+    createdAt: Date;
+    // Add other fields as needed
+  };
+
+export function DataTable({ orders }: { orders: OrderWithUserAndAddress[] }) {
   const toast = useToast(); // Moved inside the component
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
