@@ -38,7 +38,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Order } from "@prisma/client";
+import { Order, ShippingAddress } from "@prisma/client";
 import StatusDropdown from "./StatusDropdown";
 import { formatPrice } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -46,9 +46,14 @@ import { CheckCircle2Icon, CheckIcon, ClipboardIcon } from "lucide-react";
 import { toast, useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 
-let data: Order[] = [];
+type OrderWithAddress = Order & { 
+    user: { email: string }; // Add any other properties from user if needed
+    shippingAddress: ShippingAddress | null;
+  };
 
-export const columns: ColumnDef<Order>[] = [
+let data: OrderWithAddress[] = [];
+
+export const columns: ColumnDef<OrderWithAddress>[] = [
 //   {
 //     id: "select",
 //     header: ({ table }) => (
