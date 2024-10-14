@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import {
   CaretSortIcon,
   ChevronDownIcon,
@@ -45,6 +44,7 @@ import { formatPrice } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2Icon, CheckIcon, ClipboardIcon } from "lucide-react";
 import { toast, useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 let data: Order[] = [];
 
@@ -77,7 +77,7 @@ export const columns: ColumnDef<Order>[] = [
     cell: ({ row }) => {
       const id = row.getValue("id");
       const shortId = id.slice(0, 12); // Show only first 6 characters
-      const [copied, setCopied] = React.useState(false); // State to track copy action
+      const [copied, setCopied] = useState(false); // State to track copy action
 
       const handleCopy = () => {
         navigator.clipboard.writeText(id); // Copy the full id to clipboard
