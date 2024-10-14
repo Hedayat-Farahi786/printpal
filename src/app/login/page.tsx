@@ -32,7 +32,10 @@ const LoginPage = () => {
     },
   });
 
-  const onSubmit = async (values) => {
+  const onSubmit = async (values: {
+    email: string
+    password: string
+  }) => {
     setIsLoading(true);
 
     try {
@@ -75,7 +78,7 @@ const LoginPage = () => {
     } catch (err) {
       toast({
         title: "Login failed",
-        description: err.message || "An error occurred during login",
+        description: (err as any).message || "An error occurred during login",
         variant: "destructive"
       });
     } finally {

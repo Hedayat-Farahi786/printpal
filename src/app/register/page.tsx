@@ -89,7 +89,7 @@ const SignupPage = () => {
     } catch (error) {
       toast({
         title: "Signup failed",
-        description: error.message || "An error occurred during signup",
+        description: (error as any).message || "An error occurred during signup",
         variant: "destructive",
       });
     } finally {
