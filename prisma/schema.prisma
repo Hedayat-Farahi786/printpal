@@ -52,10 +52,10 @@ model Configuration {
 }
 
 model User {
-  id    String  @id @default(cuid())
-  email String
-  Order Order[]
-
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  Order     Order[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
