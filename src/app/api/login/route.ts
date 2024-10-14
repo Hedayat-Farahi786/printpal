@@ -51,10 +51,10 @@ export async function POST(request: Request) {
     });
 
     return response;
-    // @ts-ignore
   } catch (error) {
     return NextResponse.json(
-      { message: "Internal Server Error", error: error.message },
+      // @ts-ignore
+      { message: "Internal Server Error", error: (error as any).message },
       { status: 500 }
     );
   }

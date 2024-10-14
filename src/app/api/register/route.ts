@@ -34,11 +34,11 @@ export async function POST(request: Request) {
       { message: "Account created successfully!", user: newUser },
       { status: 201 }
     );
-    // @ts-ignore
   } catch (error) {
     console.error("Error during registration:", error);
     return NextResponse.json(
-      { message: "Internal Server Error", error: error.message },
+      // @ts-ignore
+      { message: "Internal Server Error", error: (error as any).message },
       { status: 500 }
     );
   }
