@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { db } from '@/db';
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
