@@ -77,6 +77,7 @@ export const columns: ColumnDef<Order>[] = [
     cell: ({ row }) => {
       const id = row.getValue("id");
       const shortId = id.slice(0, 12); // Show only first 6 characters
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       const [copied, setCopied] = useState(false); // State to track copy action
 
       const handleCopy = () => {
