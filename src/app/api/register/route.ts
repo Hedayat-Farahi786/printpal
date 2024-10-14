@@ -34,6 +34,7 @@ export async function POST(request: Request) {
       { message: "Account created successfully!", user: newUser },
       { status: 201 }
     );
+    // @ts-ignore
   } catch (error) {
     console.error("Error during registration:", error);
     return NextResponse.json(
