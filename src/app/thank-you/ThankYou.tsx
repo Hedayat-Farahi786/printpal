@@ -7,11 +7,31 @@ import { Loader2 } from 'lucide-react'
 import PhonePreview from '@/components/PhonePreview'
 import { formatPrice } from '@/lib/utils'
 
+// Define the types for the data returned from getPaymentStatus
+type Configuration = {
+  color: string | null
+  croppedImageUrl: string | null
+}
+
+type Address = {
+  name: string
+  street: string
+  postalCode: string
+  city: string
+}
+
+type PaymentStatusData = {
+  configuration: Configuration
+  billingAddress: Address
+  shippingAddress: Address
+  amount: number
+}
+
 const ThankYou = () => {
   const searchParams = useSearchParams()
   const orderId = searchParams.get('orderId') || ''
 
-  const { data } = useQuery({
+  const { data } = useQuery<PaymentStatusData | undefined | false>({
     queryKey: ['get-payment-status'],
     queryFn: async () => await getPaymentStatus({ orderId }),
     retry: true,
