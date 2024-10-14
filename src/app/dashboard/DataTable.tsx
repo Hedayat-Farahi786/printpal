@@ -46,14 +46,22 @@ import { CheckCircle2Icon, CheckIcon, ClipboardIcon } from "lucide-react";
 import { toast, useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 
-type OrderWithAddress = Order & { 
-    user: { email: string }; // Add any other properties from user if needed
+
+  type OrderWithUserAndAddress = {
+    id: string;
+    user: {
+      email: string;
+    };
     shippingAddress: ShippingAddress | null;
+    amount: number;
+    isPaid: boolean;
+    createdAt: Date;
+    // Add other fields as needed
   };
 
-let data: OrderWithAddress[] = [];
+let data: OrderWithUserAndAddress[] = [];
 
-export const columns: ColumnDef<OrderWithAddress>[] = [
+export const columns: ColumnDef<OrderWithUserAndAddress>[] = [
 //   {
 //     id: "select",
 //     header: ({ table }) => (
@@ -218,20 +226,6 @@ export const columns: ColumnDef<OrderWithAddress>[] = [
 //   },
 ];
 
-
-type OrderWithUserAndAddress = {
-    id: string;
-    user: {
-      email: string;
-    };
-    shippingAddress: {
-      name: string;
-    };
-    amount: number;
-    isPaid: boolean;
-    createdAt: Date;
-    // Add other fields as needed
-  };
 
 export function DataTable({ orders }: { orders: OrderWithUserAndAddress[] }) {
   const toast = useToast(); // Moved inside the component
