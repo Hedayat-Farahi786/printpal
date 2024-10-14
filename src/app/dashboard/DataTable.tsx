@@ -75,7 +75,7 @@ export const columns: ColumnDef<Order>[] = [
     accessorKey: "id",
     header: () => <div className="text-left">Order Number</div>,
     cell: ({ row }) => {
-      const id = row.getValue("id");
+      const id: string = row.getValue("id");
       const shortId = id.slice(0, 12); // Show only first 6 characters
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const [copied, setCopied] = useState(false); // State to track copy action
@@ -215,13 +215,13 @@ export const columns: ColumnDef<Order>[] = [
 
 export function DataTable({ orders }) {
   const toast = useToast(); // Moved inside the component
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
     []
   );
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+    useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data: orders,
